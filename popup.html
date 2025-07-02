@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offdem</title>
+  <style>
+    /* Reset et base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      max-width: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f9fafb;
+      padding: 16px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    body::-webkit-scrollbar {
+      width: 0px;
+      display: none;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2563eb;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    /* Form */
+    #blockForm {
+      background-color: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      color: #4b5563;
+      font-size: 16px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .duration-container {
+      display: flex;
+      gap: 8px;
+    }
+
+    .duration-container input, 
+    .duration-container select {
+      width: 50%;
+    }
+
+    button {
+      width: 100%;
+      background-color: #2563eb;
+      color: white;
+      font-weight: 500;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* Blocked list */
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    #blockedList {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    #noSitesMessage {
+      color: #6b7280;
+      font-size: 14px;
+      text-align: center;
+      padding: 12px 0;
+    }
+
+    /* Blocked site items */
+    .blocked-site {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .blocked-site:last-child {
+      border-bottom: none;
+    }
+
+    .site-info {
+      flex: 1;
+    }
+
+    .site-domain {
+      font-weight: 500;
+      color: #1f2937;
+    }
+
+    .site-time {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .unblock-btn {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .unblock-btn:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Offdem</h1>
+    <p>Block distracting websites to improve focus</p>
+  </header>
+  
+  <div>
+    <form id="blockForm">
+      <div class="form-group">
+        <label for="domain">Website to block</label>
+        <input type="text" id="domain" placeholder="example.com">
+        <p class="hint">Enter domain only (e.g., facebook.com)</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="duration">Duration</label>
+        <div class="duration-container">
+          <input type="number" id="duration" min="1" value="30">
+          <select id="timeUnit">
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+          </select>
+        </div>
+      </div>
+      
+      <button type="submit">Block Website</button>
+    </form>
+  </div>
+  
+  <div>
+    <h2>Currently Blocked</h2>
+    <div id="blockedList">
+      <!-- Blocked sites will be added here dynamically -->
+      <p id="noSitesMessage">No websites currently blocked</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
